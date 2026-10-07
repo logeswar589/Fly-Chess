@@ -6,7 +6,22 @@ A phased project for a trainable self-play chess agent, a bespoke monochrome int
 
 ## Windows setup
 
-Python 3.11+ is required. Tested on Windows with Python 3.14.5 and Pygame CE 2.5.8.
+1. Download this repository using **Code → Download ZIP**, then **Extract all** (or clone it).
+2. Open the extracted folder and double-click **Setup-Fly.cmd**. Keep the window open until it says **Setup complete**.
+3. Double-click **Start-Fly-Web.cmd** and open its printed access link in Chrome.
+4. For the desktop application, double-click **Start-Fly-Desktop.cmd** instead.
+
+Setup installs Python if needed, creates a local `.venv`, installs dependencies,
+selects CPU/NVIDIA support and verifies the engine and browser assets. Requires
+Windows 10/11 on an Intel/AMD 64-bit PC and internet for installation. NVIDIA
+downloads can be several GB. Close Fly before rerunning setup; saved models and
+training data are preserved. No Git, Node.js or manual Python setup is required.
+Fly starts untrained unless you supply a checkpoint; you can try it immediately.
+See the [setup guide](docs/setup.md) for options and troubleshooting.
+
+### Manual / developer setup
+
+Python 3.11–3.14 is supported by the Windows installer. Tested on Windows with Python 3.14.5 and Pygame CE 2.5.8.
 
 Release artifacts are `dist/fly_chess-0.1.0-py3-none-any.whl` and
 `dist/fly-chess-0.1.0-source.zip`, with checksums in `dist/manifest.json`.
@@ -29,6 +44,22 @@ For the detected RTX 3050 laptop GPU, the CUDA 12.8 PyTorch build can be install
 On other machines, choose the matching build through the [official PyTorch installer](https://pytorch.org/get-started/locally/). `device = "auto"` probes actual CUDA execution and falls back to CPU with a reason; explicit `cuda` fails clearly if unusable. No driver or system toolkit installation is performed by Fly-Chess.
 
 ## Desktop play, training, and human learning
+
+### Browser / Chrome edition
+
+Double-click **Start-Fly-Web.cmd**, then open the access link printed in the
+terminal in Chrome. No PowerShell execution-policy change is needed. Or run:
+
+```powershell
+.\.venv\Scripts\python.exe -m fly_chess --config configs/lightweight.toml web
+```
+
+The browser edition provides play, training controls, recorded self-play, human
+learning and a rotatable/zoomable brain with highlighted measured weighted
+connections. Add `--host 0.0.0.0` for other devices on a trusted LAN. See the
+[browser guide](docs/browser.md) for access links, controls and remote-use limits.
+
+### Desktop
 
 For graphical play, use `fly-chess gui --weights models/fly_best.pt`, or omit weights
 for the honest untrained/empty state. Train opens real training controls; Learning,

@@ -12,6 +12,7 @@ class BrainView:
         self.rect = pg.Rect(744, 320, 640, 365)
         self.drag = None
         self.phase = 'after'
+        self.synapses = True
 
     def reset(self):
         self.zoom, self.yaw, self.pitch = 1., .15, -.12
@@ -93,6 +94,16 @@ class BrainView:
         p.surface.set_clip(pg.Rect(p.point(self.rect.topleft), p.point(self.rect.size)))
         hovered = None
         try:
+            positions = {(name, index): point for _, point, name, index, _ in projected}
+            edges = (snapshot or {}).get('connections', []) if self.synapses else []
+            limit = max((abs(e['contribution']) for e in edges), default=1) or 1
+            for edge in edges:
+                a = positions.get((edge['source'], edge['source_index']))
+                b = positions.get((edge['target'], edge['target_index']))
+                if a and b:
+                    strength = abs(edge['contribution'])/limit
+                    gray = round(35+190*strength)
+                    p.segment((gray, gray, gray), a, b, 2 if strength > .6 else 1)
             for z, point, name, index, value in sorted(projected, reverse=True):
                 strength = abs(value)/scales[name]
                 gray = round(45+strength*195)
@@ -110,5 +121,5 @@ class BrainView:
         p.text('TRUNK / POLICY / VALUE', 1074, y+height-23, 11, MUTED, True)
         detail = f'{hovered[0]} [{hovered[1]}] = {hovered[2]:+.5g}' if hovered else f'{len(nodes)} measured samples / {len(scales)} layer outputs'
         p.text(detail[:77], 744, y+height+5, 13, INK, True)
-        p.text('Brightness: magnitude per layer / hollow: negative / dim: near zero', 744, y+height+29, 12, MUTED)
-        p.text('Fly-inspired layout / sampled artificial neurons / no anatomical mapping', 744, y+height+50, 12, MUTED)
+        p.text('Nodes: |activation| per layer / traces: |input × weight| / hollow: negative', 744, y+height+29, 12, MUTED)
+        p.text('Fly-inspired layout / sampled artificial connections / not biological anatomy', 744, y+height+50, 12, MUTED)

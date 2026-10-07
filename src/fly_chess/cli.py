@@ -18,6 +18,10 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     gui = commands.add_parser("gui", help="Open the monochrome chess and brain interface")
     gui.add_argument("--weights", type=Path, help="Saved inference or training checkpoint for play")
+    web = commands.add_parser('web', help='Serve Fly in Chrome or another modern browser')
+    web.add_argument('--host', choices=('127.0.0.1', '0.0.0.0'), default='127.0.0.1')
+    web.add_argument('--port', type=int, default=8765)
+    web.add_argument('--weights', type=Path)
     human = commands.add_parser('train-human', help='Explicitly train a candidate from consented complete human PGNs, then evaluate')
     human.add_argument('--base', type=Path, required=True)
     human.add_argument('--epochs', type=int, default=1)
@@ -53,6 +57,10 @@ def main(argv: list[str] | None = None) -> int:
         workspace = Workspace(args.workspace.resolve())
         workspace.initialize()
         logger = workspace.configure_logging()
+        if args.command == 'web':
+            from fly_chess.web.server import run
+            run(workspace.root, config, host=args.host, port=args.port, weights=args.weights)
+            return 0
         if args.command == 'train-human':
             from fly_chess.training.human import train_human_candidate
             report = train_human_candidate(workspace.root, args.base, config, epochs=args.epochs,

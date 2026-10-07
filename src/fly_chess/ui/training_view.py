@@ -329,6 +329,7 @@ class TrainingView:
             button('Live' if self.frozen else 'Freeze', 744, 405, 94, self.toggle_freeze, enabled=bool(inspection))
             button('Before', 850, 405, 100, lambda: setattr(view, 'phase', 'before'), active=view.phase == 'before')
             button('After', 960, 405, 100, lambda: setattr(view, 'phase', 'after'), active=view.phase == 'after')
+            button('Synapses', 1100, 405, 132, lambda: setattr(view, 'synapses', not view.synapses), active=view.synapses)
             button('Reset view', 1244, 405, 140, view.reset)
             p.text('Scroll: zoom / drag: rotate / hover: activation', 744, 453, 13, MUTED)
             sample = inspection or {}

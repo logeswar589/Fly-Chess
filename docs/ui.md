@@ -33,6 +33,10 @@ of biological anatomy or synaptic connectivity. Up to 48 evenly spaced scalar
 samples per leaf output are captured, with a separate 8,192-value ceiling. The
 timestamp and source position identify the latest forward pass; activity is not
 artificially animated between measurements. Freeze retains the captured values.
+Synapses toggles sampled real Conv2d/Linear connections. Their brightness follows
+the magnitude of input activation times weight. These show selected weighted
+terms, not complete biological connectivity; see docs/browser.md for the sampling
+contract. The same measurements drive the browser and desktop views.
 
 Click a piece and its destination, or use arrow keys and Enter. Promotion offers
 all four legal choices. Tab/Shift+Tab and Enter navigate controls. Escape clears

@@ -22,14 +22,39 @@ def test_brain_samples_match_every_leaf_output_without_changing_forward():
             with ActivationCapture(model, InspectionRequest('brain', selected_module='stem', brain=True), {}) as capture:
                 result = model(states)
         assert all(torch.equal(a, b) for a, b in zip(baseline, result))
-        assert set(capture.snapshot['brain']) == set(expected)
+        assert {k for k in capture.snapshot['brain'] if '/input:' not in k} == set(expected)
         for name, sample in capture.snapshot['brain'].items():
-            assert sample['values'] == expected[name].reshape(-1)[sample['indices']].tolist()
+            if '/input:' not in name:
+                assert sample['values'] == expected[name].reshape(-1)[sample['indices']].tolist()
         assert sum(len(s['values']) for s in capture.snapshot['brain'].values()) <= 8192
     finally:
         for handle in handles:
             handle.remove()
     assert all(not module._forward_hooks for module in model.modules())
+
+
+def test_weighted_connections_are_actual_linear_and_convolution_terms():
+    for layer, states in ((torch.nn.Linear(4, 3, bias=False), torch.tensor([[1., 2., 3., 4.]])),
+                          (torch.nn.Conv2d(1, 1, 3, padding=1, bias=False), torch.arange(16.).reshape(1, 1, 4, 4))):
+        model = torch.nn.Sequential(layer)
+        with torch.no_grad():
+            layer.weight.fill_(.1)
+            if states.ndim == 4:
+                layer.weight[0, 0, 1, 1] = -2
+            else:
+                layer.weight[:, 2] = -2
+            with ActivationCapture(model, InspectionRequest('edges', brain=True), {}) as capture:
+                model(states)
+        edges = capture.snapshot['connections']
+        assert edges
+        for edge in edges:
+            assert edge['input'] == states.reshape(-1)[edge['source_index']].item()
+            assert edge['weight'] == -2
+            assert edge['contribution'] == edge['input']*-2
+            if states.ndim == 4:
+                assert edge['source_index'] == edge['target_index']
+            else:
+                assert edge['source_index'] == 2
 
 
 def test_brain_controls_and_empty_render_preserve_clip():

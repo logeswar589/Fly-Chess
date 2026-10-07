@@ -21,6 +21,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "fly_chess.ui" = ["assets/*.ttf", "assets/*.txt"]
+"fly_chess.web" = ["static/*.html", "static/*.css", "static/*.js"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

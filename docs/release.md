@@ -119,3 +119,10 @@ Adaptation remains optional, experimental and off by default.
 The release establishes functionality and recovery in the tested scenarios.
 Meaningful playing strength requires a separate sustained training and evaluation
 campaign; the included verification checkpoints are deliberately small smoke models.
+# Browser follow-up
+
+The source archive now also includes Start-Fly-Web.cmd and docs/browser.md. The
+wheel bundles the web HTML/CSS/JavaScript. `fly-chess web` starts a token-protected
+local browser interface; add `--host 0.0.0.0` for a trusted LAN. Current regression:
+150 tests passed. Browser assets and weighted brain connections are additional to
+the original desktop release verification below.

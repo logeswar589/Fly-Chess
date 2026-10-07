@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $flyPython = Join-Path $PSScriptRoot '.venv\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $flyPython)) {
-    throw 'Set up the environment first: python -m venv .venv, then .\.venv\Scripts\python.exe -m pip install -e ".[dev]"'
+    throw 'Double-click Setup-Fly.cmd first to install Python and project dependencies.'
 }
 $flyArguments = @('-m', 'fly_chess', '--workspace', $Workspace)
 if ($Config) { $flyArguments += @('--config', $Config) }

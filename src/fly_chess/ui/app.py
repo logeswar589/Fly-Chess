@@ -202,7 +202,8 @@ class Application:
         p.text('Position '+ev.position_id[:16], 744, 267, 12, MUTED, True)
         if self.tab == 'Brain':
             self.button('Reset view', 1244, 285, 140, self.brain_view.reset)
-            p.text('Scroll to zoom / drag to rotate / hover to inspect', 744, 298, 13, MUTED)
+            self.button('Synapses', 1128, 285, 106, lambda: setattr(self.brain_view, 'synapses', not self.brain_view.synapses), active=self.brain_view.synapses)
+            p.text('Scroll: zoom / drag: rotate / hover: inspect', 744, 298, 12, MUTED)
             self.brain_view.draw(p, ev.inspection, self.mouse, y=330, height=350)
             snap = ev.inspection or {}
             p.text('Captured '+snap.get('timestamp_utc', 'unavailable')[11:23]+' UTC / latest position sample', 744, 750, 12, MUTED, True)

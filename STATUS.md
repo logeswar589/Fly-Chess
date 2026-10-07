@@ -63,3 +63,12 @@ Use a fresh UUID --basetemp under .pytest_cache for pytest; the system shared te
 - Added default Brain tabs to Play and Train: fly-inspired 3D activation clouds, scroll zoom, drag rotation, exact-value hover, reset and freeze. Training compares real before/after captures with shared layer scales.
 - Separate bounded telemetry samples every leaf module (48 values/output, 8,192 maximum); coordinates are illustrative and do not claim anatomical or synaptic fidelity. Values refresh on measured forwards/optimizer captures, not decorative animation. Self-play/evaluation retain the latest optimizer capture.
 - Full regression: 146 tests passed. Real training/render workflow: logs/gui-training-72aefffe, 2 games/2 updates, 276 frames, mean frame work 6.46 ms. Screenshot review at 1200×800 and 1440×960.
+
+## Browser edition and weighted connections — 2026-10-07
+
+- Added `web` command and `Start-Fly-Web.cmd`, using the existing Python engine and workers with a responsive browser interface. Local fonts/assets, no frontend build or CDN. Dark editorial layout with serif headings inspired by the supplied Elyse reference.
+- Browser play, promotion/undo/draw/resign, checkpoint selection, adaptation, opt-in human archives/learning, training start/load/resume/pause/save/stop, sampled before/after brain, recent loss chart, and archived-game replay are connected to actual backend state.
+- Added measured weighted edges to desktop and browser brains: up to 12 strongest-weight terms at sampled outputs per Conv2d/Linear module. Actual input coordinates and `input * weight` contribution determine highlighting. Coordinates remain illustrative; the graph is sampled artificial connectivity, not fly anatomy.
+- Browser zoom/rotation, pinch, expanded view, hover values, connected-edge highlighting, freeze/reset and keyboard camera controls. Empty-state text distinguishes disabled capture from waiting for optimizer updates.
+- API token required, same-origin mutations, allowlisted assets/checkpoints, one shared match/workspace. Loopback default; explicit LAN option. Internet access requires a private VPN or separately secured deployment.
+- Verification: 150 tests passed in 88.44s, including real HTTP play/AI reply, stale-move rejection, underpromotion, real training/checkpoint reload/replay and access boundaries. Desktop and 390-pixel mobile layouts reviewed in the browser; no browser console errors observed. Screenshots: logs/browser-brain.jpg. See docs/browser.md.

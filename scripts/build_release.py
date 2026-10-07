@@ -17,7 +17,8 @@ def main():
                     '--wheel-dir', str(output), str(root)], check=True)
     source = output/f'fly-chess-{version}-source.zip'
     files = [root/name for name in ('pyproject.toml', 'README.md', 'PHASE_PLAN.md', 'STATUS.md',
-                                    'Start-Fly.ps1', 'constraints-tested.txt', '.gitignore')]
+                                    'Start-Fly.ps1', 'Start-Fly-Web.cmd', 'Start-Fly-Desktop.cmd',
+                                    'Setup-Fly.cmd', 'Setup-Fly.ps1', 'constraints-tested.txt', '.gitignore')]
     for name in ('src/fly_chess', 'configs', 'docs', 'tests', 'scripts'):
         files.extend(p for p in (root/name).rglob('*') if p.is_file()
                      and '__pycache__' not in p.parts and p.suffix != '.pyc')
