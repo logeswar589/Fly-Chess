@@ -89,7 +89,7 @@ def main():
         assert final['completed_generations'] == 2 and final['training_steps'] == 4
         assert final['games_played'] == 4
         assert final['evaluation']['status'] == 'complete' and not final['evaluation']['promoted']
-        for pane in ('Learning', 'Stats', 'Config', 'Human', 'Watch'):
+        for pane in ('Brain', 'Learning', 'Stats', 'Config', 'Human', 'Watch'):
             app.training.pane = pane
             pg.image.save(app.draw(), root/f'{pane.lower()}.png')
             pg.image.save(app.draw(1200/1440), root/f'{pane.lower()}-small.png')
@@ -101,7 +101,7 @@ def main():
         wait(lambda: app.session.human_turn)
         assert app.match_model_id.endswith('step-4')
         assert app.match_model_id != first_model
-        for tab in ('Overview', 'Layers', 'Search', 'Opponent'):
+        for tab in ('Brain', 'Overview', 'Layers', 'Search', 'Opponent'):
             app.tab = tab
             pg.image.save(app.draw(), root/f'play-{tab.lower()}.png')
         app.error = 'Verification error state / missing checkpoint'

@@ -19,7 +19,7 @@ def train_step(model, optimizer, samples, *, regularization: float, gradient_cli
     def capture(label):
         from fly_chess.neural.inspection import ActivationCapture, InspectionRequest
         request = InspectionRequest('training-'+label, max_values=65536, values_per_tensor=65536,
-                                    selected_module=activation_module)
+                                    selected_module=activation_module, brain=True)
         with torch.no_grad(), ActivationCapture(model, request, {'phase': label}) as collector:
             model(states[:1])
         captures[label] = collector.snapshot

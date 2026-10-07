@@ -25,7 +25,7 @@ def main():
             time.sleep(.02)
         if app.error or app.data is None:
             raise RuntimeError(app.error or 'Inspection timed out')
-        for tab in ('Overview', 'Layers', 'Opponent'):
+        for tab in ('Brain', 'Overview', 'Layers', 'Opponent'):
             app.tab = tab
             pg.image.save(app.draw(), output / f'play-{tab.lower()}.png')
         import chess

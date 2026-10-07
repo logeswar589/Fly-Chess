@@ -37,7 +37,7 @@ def main():
         app.tick()
         if app.training.error or not app.training.state.get('inspection'):
             raise RuntimeError(app.training.error or 'No sampled update')
-        for pane in ('Learning', 'Stats', 'Config', 'Watch'):
+        for pane in ('Brain', 'Learning', 'Stats', 'Config', 'Watch'):
             app.training.pane = pane
             if pane == 'Watch':
                 app.training.watch_playing = False

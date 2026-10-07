@@ -28,6 +28,15 @@ with an explicit omitted count. No callback draws or handles events in a worker.
 
 ## Brain and charts
 
+The Brain tab shows a zoomable, rotatable fly-inspired view of measured activation
+samples across all leaf modules. Before/After compares the same replay position
+around a real optimizer update, using shared per-layer brightness scales. Hover
+shows the exact source tensor index and value. Freeze pins the update. Sampling
+uses the existing diagnostics/activation switches and 1/8/32-step interval. During
+self-play or evaluation, this view retains the latest sampled optimizer update;
+it does not claim to stream those workers' live search activity. Old checkpoints
+without brain captures show an empty state until a new sampled update arrives.
+
 Learning samples one real replay position at a configurable 1/8/32-step interval
 (default 8). Freeze retains it as later updates arrive. The board, sample game/ply,
 optimizer step, side and capture time identify the source. Before/after views use

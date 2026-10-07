@@ -82,7 +82,9 @@ class TrainingView:
         self.notice = 'Ready. Start a new run, or load a full checkpoint.'
         self.resume = self.root / 'models/fly_latest.pt'
         self.generations = 1
-        self.pane = 'Learning'
+        self.pane = 'Brain'
+        from fly_chess.ui.brain_view import BrainView
+        self.brain_view = BrainView()
         self.telemetry = True
         self.activations = True
         self.gradients = True
@@ -320,9 +322,21 @@ class TrainingView:
         for i, (label, value) in enumerate(fields):
             p.label(label, 744+i*162, 272)
             p.text(value, 744+i*162, 298, 25, INK, True)
-        for i, name in enumerate(('Learning', 'Stats', 'Watch', 'Config', 'Human')):
-            button(name, 744+i*130, 351, 120, lambda n=name: setattr(self, 'pane', n), active=self.pane == name)
-        if self.pane == 'Learning':
+        for i, name in enumerate(('Brain', 'Learning', 'Stats', 'Watch', 'Config', 'Human')):
+            button(name, 744+i*108, 351, 100, lambda n=name: setattr(self, 'pane', n), active=self.pane == name)
+        if self.pane == 'Brain':
+            view = self.brain_view
+            button('Live' if self.frozen else 'Freeze', 744, 405, 94, self.toggle_freeze, enabled=bool(inspection))
+            button('Before', 850, 405, 100, lambda: setattr(view, 'phase', 'before'), active=view.phase == 'before')
+            button('After', 960, 405, 100, lambda: setattr(view, 'phase', 'after'), active=view.phase == 'after')
+            button('Reset view', 1244, 405, 140, view.reset)
+            p.text('Scroll: zoom / drag: rotate / hover: activation', 744, 453, 13, MUTED)
+            sample = inspection or {}
+            view.draw(p, sample.get(view.phase), app.mouse, y=478, height=310,
+                      reference=sample.get('before' if view.phase == 'after' else 'after'))
+            p.text(f'Latest sampled update / step {sample.get("step", "—")} / {view.phase}', 744, 866, 13, MUTED, True)
+            p.text(f'Refreshes every {self.interval} optimizer steps; self-play precedes updates.', 744, 890, 12, MUTED)
+        elif self.pane == 'Learning':
             self.draw_learning(app, inspection)
         elif self.pane == 'Stats':
             self.draw_stats(app)

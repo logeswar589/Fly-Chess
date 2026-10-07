@@ -73,6 +73,9 @@ def test_gui_bridge_pause_save_exit_reload_resume_with_real_captures(tmp_path):
         assert sample['step'] == final['progress']['training_steps']
         assert sample['before']['tensors']['stem.0:0']['shape'] == [1, 8, 8, 8]
         assert sample['after']['tensors']['stem.0:0']['sample_values'] != sample['before']['tensors']['stem.0:0']['sample_values']
+        assert sample['after']['brain']['stem.0:0']['values'] != sample['before']['brain']['stem.0:0']['values']
+        assert 'policy.projection:0' in sample['after']['brain']
+        assert 'value.6:0' in sample['after']['brain']
         assert sample['learning']['layers']['stem.0']['update_norm'] > 0
         assert final['watch']['status'] == 'truncated'
         assert final['metrics'][-1]['sample_keys'][0] == sample['sample_key']

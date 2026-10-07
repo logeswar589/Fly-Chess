@@ -57,3 +57,9 @@ Use a fresh UUID --basetemp under .pytest_cache for pytest; the system shared te
 - Stop/pause/close finish a self-play wave or minibatch; evaluation stops between searches. No forced shutdown. Keep rendering while waiting. Slow viewers may drop display reports, never durable training events.
 - All telemetry is bounded and labeled by source. Never imply old/frozen samples describe the current board. Missing activation/archive/evaluation/rating data must remain explicit. Large activation captures are transient, not accumulated in checkpoints.
 - Checkpoint/PGN/dataset/metric retention is not pruned automatically. Long-run storage/memory behavior and measured playing strength remain uncharacterized. Package isolation/asset/workflow checks passed. No calibrated Elo or improvement claim exists.
+
+## Brain view follow-up — 2026-10-07
+
+- Added default Brain tabs to Play and Train: fly-inspired 3D activation clouds, scroll zoom, drag rotation, exact-value hover, reset and freeze. Training compares real before/after captures with shared layer scales.
+- Separate bounded telemetry samples every leaf module (48 values/output, 8,192 maximum); coordinates are illustrative and do not claim anatomical or synaptic fidelity. Values refresh on measured forwards/optimizer captures, not decorative animation. Self-play/evaluation retain the latest optimizer capture.
+- Full regression: 146 tests passed. Real training/render workflow: logs/gui-training-72aefffe, 2 games/2 updates, 276 frames, mean frame work 6.46 ms. Screenshot review at 1200×800 and 1440×960.

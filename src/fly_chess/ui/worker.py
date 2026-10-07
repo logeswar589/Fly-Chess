@@ -86,7 +86,7 @@ class BrainWorker:
             if cancel.is_set():
                 return
             inspection = InspectionRequest(str(token), max_values=65536, values_per_tensor=65536,
-                selected_module=module) if telemetry else None
+                selected_module=module, brain=True) if telemetry else None
             evaluation = evaluator.evaluate([game], inspection=inspection)[0]
             payload = {'token': token, 'kind': 'inspection', 'fen': game.board.fen(),
                 'ply': len(game.board.move_stack), 'evaluation': evaluation,

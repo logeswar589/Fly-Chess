@@ -12,6 +12,7 @@ class InspectionRequest:
     max_values: int = 4096
     values_per_tensor: int = 64
     selected_module: str | None = None
+    brain: bool = False
 
     def __post_init__(self):
         if not isinstance(self.request_id, str) or not self.request_id:
@@ -30,10 +31,12 @@ class ActivationCapture:
         self.snapshot = {
             **metadata, "request_id": request.request_id,
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "kind": "sampled", "tensors": {},
+            "kind": "sampled", "tensors": {}, "brain": {},
         }
         self.remaining = request.max_values
         self.handles = []
+        self.brain_remaining = 8192 if request.brain else 0
+        self.leaf_names = {name for name, module in model.named_modules() if not list(module.children())}
 
     def _record(self, name, output):
         outputs = output if isinstance(output, tuple) else (output,)
@@ -41,6 +44,15 @@ class ActivationCapture:
             if not isinstance(tensor, torch.Tensor):
                 continue
             key = f"{name}:{index}"
+            if name in self.leaf_names and self.brain_remaining:
+                flat = tensor.detach().reshape(-1)
+                n = min(48, flat.numel(), self.brain_remaining)
+                indices = torch.linspace(0, flat.numel()-1, n, device=flat.device).long()
+                self.snapshot['brain'][key] = {
+                    'indices': indices.cpu().tolist(), 'values': flat[indices].float().cpu().tolist(),
+                    'shape': list(tensor.shape), 'total': flat.numel(),
+                }
+                self.brain_remaining -= n
             eligible = self.request.selected_module in (None, name)
             count = min(self.remaining, self.request.values_per_tensor, tensor.numel()) if eligible else 0
             # Slice on the device before transfer; materialize independent Python values.

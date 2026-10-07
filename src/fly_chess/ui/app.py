@@ -35,7 +35,9 @@ class Application:
         self.selected = None
         self.cursor = chess.E2
         self.promotion = []
-        self.tab = 'Overview'
+        self.tab = 'Brain'
+        from fly_chess.ui.brain_view import BrainView
+        self.brain_view = BrainView()
         self.module = 'stem'
         self.channel = 0
         self.layer_mode = 'Activations'
@@ -189,8 +191,8 @@ class Application:
             current = data['token'] == self.session.token
             label = ('Frozen' if self.frozen else 'Current sample' if current else 'Recorded decision')+f' / ply {data["ply"]} / '+('White' if chess.Board(data['fen']).turn else 'Black')+' to move'
         p.text(label, 744, 151, 15, MUTED, True)
-        for i, tab in enumerate(('Overview', 'Layers', 'Search', 'Opponent')):
-            self.button(tab, 744+i*162, 190, 152, lambda t=tab: setattr(self, 'tab', t), active=tab == self.tab)
+        for i, tab in enumerate(('Brain', 'Overview', 'Layers', 'Search', 'Opponent')):
+            self.button(tab, 744+i*130, 190, 120, lambda t=tab: setattr(self, 'tab', t), active=tab == self.tab)
         if not data:
             p.text('Waiting for a real forward pass.', 744, 280, 24)
             p.text('The board remains interactive while Fly loads.', 744, 323, 17, MUTED)
@@ -198,7 +200,13 @@ class Application:
         ev = data['evaluation']
         p.text(ev.model_id[:64], 744, 243, 12, MUTED, True)
         p.text('Position '+ev.position_id[:16], 744, 267, 12, MUTED, True)
-        if self.tab == 'Overview':
+        if self.tab == 'Brain':
+            self.button('Reset view', 1244, 285, 140, self.brain_view.reset)
+            p.text('Scroll to zoom / drag to rotate / hover to inspect', 744, 298, 13, MUTED)
+            self.brain_view.draw(p, ev.inspection, self.mouse, y=330, height=350)
+            snap = ev.inspection or {}
+            p.text('Captured '+snap.get('timestamp_utc', 'unavailable')[11:23]+' UTC / latest position sample', 744, 750, 12, MUTED, True)
+        elif self.tab == 'Overview':
             self.draw_overview(data)
         elif self.tab == 'Layers':
             self.draw_layers(data)
@@ -555,6 +563,9 @@ class Application:
 
     def handle_event(self, event, position=None):
         if self.closing:
+            return
+        viewer = self.brain_view if self.screen == 'play' and self.tab == 'Brain' else self.training.brain_view if self.screen == 'train' and self.training.pane == 'Brain' else None
+        if viewer and viewer.handle(event, position if position is not None else self.mouse):
             return
         if event.type == pg.QUIT:
             self.worker.stop()

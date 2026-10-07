@@ -24,6 +24,16 @@ disabled in Settings. No decorative animation or fabricated training metrics.
 
 ## Playing and inspecting
 
+Brain is the default play tab: a fly-inspired, three-dimensional layout of real
+activation samples from all leaf modules. Scroll over the brain to zoom (0.6–4×),
+drag to rotate, hover to inspect the module/flat tensor index/value, and use Reset
+view to return home. Brightness is absolute magnitude normalized per layer;
+hollow points indicate negative values. Placement is illustrative, with no claim
+of biological anatomy or synaptic connectivity. Up to 48 evenly spaced scalar
+samples per leaf output are captured, with a separate 8,192-value ceiling. The
+timestamp and source position identify the latest forward pass; activity is not
+artificially animated between measurements. Freeze retains the captured values.
+
 Click a piece and its destination, or use arrow keys and Enter. Promotion offers
 all four legal choices. Tab/Shift+Tab and Enter navigate controls. Escape clears
 selection. Undo restores the previous human decision and invalidates any pending

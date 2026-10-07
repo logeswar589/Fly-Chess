@@ -35,6 +35,11 @@ for the honest untrained/empty state. Train opens real training controls; Learni
 Stats, Watch, Config and Human select the lab views. See [UI controls](docs/ui.md)
 and [training UI](docs/training-ui.md) for checkpoints, inspection, playback and limits.
 
+Play and Train also have a **Brain** tab: scroll to zoom, drag to rotate, and hover
+to inspect real activation samples in a fly-inspired 3D layout. Training offers
+Before/After views of sampled optimizer updates. The layout is illustrative;
+the activity values come from Fly's actual artificial neural network.
+
 Human-game saving is explicitly opt-in in Settings or Train → Human. Records save
 on New/Exit; incomplete games never become outcome targets. **Train from human
 games** creates a separate supervised candidate and evaluates it before any
