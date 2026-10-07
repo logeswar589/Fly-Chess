@@ -1,0 +1,18 @@
+# Tiny pipeline check. Ply-limited records are truncations, not chess draws.
+device = "cpu"
+network_channels = 8
+residual_blocks = 1
+cpu_threads = 1
+batch_size = 4
+mcts_simulations = 2
+selfplay_workers = 2
+games_per_generation = 2
+max_game_plies = 8
+replay_buffer_size = 64
+seed = 42
+updates_per_generation = 2
+training_inspection_interval = 1
+evaluation_pairs = 2
+evaluation_min_pairs = 20
+evaluation_simulations = 2
+evaluation_max_plies = 8

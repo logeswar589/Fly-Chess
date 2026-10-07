@@ -1,0 +1,9 @@
+# Verified Windows / Python 3.14.5 environment. CUDA build: torch 2.11.0+cu128.
+# These pins describe the tested environment, not every supported Python/platform.
+chess==1.11.2
+numpy==2.5.3
+torch==2.11.0
+filelock==4.0.12
+pygame-ce==2.5.8
+pytest==9.1.1
+setuptools==78.1.0
